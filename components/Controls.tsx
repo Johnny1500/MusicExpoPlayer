@@ -15,7 +15,7 @@ interface Props {}
 
 interface State {
   isPlaying: boolean;
-  playbackInstance: object | null;
+  playbackInstance: Audio.Sound | null;
   currentIndex: number;
   volume: number;
   isBuffering: boolean;
@@ -79,6 +79,11 @@ export class Controls extends React.Component<Props, State> {
       const playbackInstance: Audio.Sound = new Audio.Sound();
       // console.log(playList[currentIndex].uri);
       // const source: Object = require('../assets/sounds/Clarinet Concerto in A major, K. 622 - I. Allegro.mp3');
+      // require("../assets/sounds/test.mp3"),
+
+      // const filePath: string = encodeURI("../assets/sounds/Le Nozze di Figaro - No. 11 Cavatina.mp3");
+
+      // console.log('filePath :', filePath);
 
       const status = {
         shouldPlay: isPlaying,
@@ -87,7 +92,7 @@ export class Controls extends React.Component<Props, State> {
 
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
       await playbackInstance.loadAsync(
-        require("../assets/sounds/Clarinet Concerto in A major, K. 622 - I. Allegro.mp3"),
+        require("../assets/sounds/test.mp3"),
         status,
         false
       );
@@ -99,9 +104,20 @@ export class Controls extends React.Component<Props, State> {
     }
   }
 
-  onPlaybackStatusUpdate = (status) => {
+  onPlaybackStatusUpdate = (status: AVPlaybackStatus): void => {
     this.setState({
       isBuffering: status.isBuffering,
+    });
+  };
+
+  handlePlayPause = async (): Promise<void> => {
+    const { isPlaying, playbackInstance } = this.state;
+    isPlaying
+      ? await playbackInstance.pauseAsync()
+      : await playbackInstance.playAsync();
+
+    this.setState({
+      isPlaying: !isPlaying,
     });
   };
 
@@ -118,7 +134,7 @@ export class Controls extends React.Component<Props, State> {
         <TouchableOpacity onPress={() => alert("")}>
           <MaterialIcons name="skip-previous" size={38} color="#7470ff" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert("")}>
+        <TouchableOpacity onPress={this.handlePlayPause}>
           {isPlaying ? (
             <MaterialIcons
               name="pause-circle-filled"
