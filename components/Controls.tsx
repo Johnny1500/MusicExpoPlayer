@@ -26,23 +26,21 @@ const playList: Track[] = [
     title: "Clarinet Concerto in A major, K. 622 - I. Allegro",
     author: "Wolfgang Amadeus Mozart",
     source: "musopen.org",
-    uri:
-      "../assets/sounds/Clarinet Concerto in A major, K. 622 - I. Allegro.mp3",
+    uri: "../assets/sounds/1.mp3",
     imageSource: "../assets/images/Mozart_cover.jpg",
   },
   {
     title: "Le Nozze di Figaro - No. 11 Cavatina",
     author: "Wolfgang Amadeus Mozart",
     source: "musopen.org",
-    uri: "../assets/sounds/Le Nozze di Figaro - No. 11 Cavatina.mp3",
+    uri: "../assets/sounds/2.mp3",
     imageSource: "../assets/images/Mozart_cover2.jpg",
   },
   {
     title: "Mozart - Serenade No. 5, K. 204 in D major - IV. Menuetto",
     author: "Wolfgang Amadeus Mozart",
     source: "musopen.org",
-    uri:
-      "../assets/sounds/Mozart - Serenade No. 5, K. 204 in D major - IV. Menuetto.mp3",
+    uri: "../assets/sounds/3.mp3",
     imageSource: "../assets/images/Mozart_cover.jpg",
   },
 ];
@@ -77,22 +75,18 @@ export class Controls extends React.Component<Props, State> {
 
     try {
       const playbackInstance: Audio.Sound = new Audio.Sound();
-      // console.log(playList[currentIndex].uri);
-      // const source: Object = require('../assets/sounds/Clarinet Concerto in A major, K. 622 - I. Allegro.mp3');
-      // require("../assets/sounds/test.mp3"),
+      console.log(playList[currentIndex].uri);
 
-      // const filePath: string = encodeURI("../assets/sounds/Le Nozze di Figaro - No. 11 Cavatina.mp3");
+      const source: string = playList[currentIndex].uri;
 
-      // console.log('filePath :', filePath);
-
-      const status = {
+      const status: object = {
         shouldPlay: isPlaying,
         volume: volume,
       };
 
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
       await playbackInstance.loadAsync(
-        require("../assets/sounds/test.mp3"),
+        require(source),
         status,
         false
       );
