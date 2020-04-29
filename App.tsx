@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
   lineStyle: {
     borderWidth: 1,
-    borderColor: "#7470ff",
+    borderColor: "#2f712f",
     marginHorizontal: vw(2),
   },
 });

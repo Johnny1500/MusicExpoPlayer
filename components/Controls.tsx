@@ -9,6 +9,7 @@ interface Track {
   source: string;
   uri: string;
   imageSource: string;
+  requireSource: any;
 }
 
 interface Props {}
@@ -28,6 +29,7 @@ const playList: Track[] = [
     source: "musopen.org",
     uri: "../assets/sounds/1.mp3",
     imageSource: "../assets/images/Mozart_cover.jpg",
+    requireSource: require("../assets/sounds/1.mp3"),
   },
   {
     title: "Le Nozze di Figaro - No. 11 Cavatina",
@@ -35,6 +37,7 @@ const playList: Track[] = [
     source: "musopen.org",
     uri: "../assets/sounds/2.mp3",
     imageSource: "../assets/images/Mozart_cover2.jpg",
+    requireSource: require("../assets/sounds/2.mp3"),
   },
   {
     title: "Mozart - Serenade No. 5, K. 204 in D major - IV. Menuetto",
@@ -42,6 +45,7 @@ const playList: Track[] = [
     source: "musopen.org",
     uri: "../assets/sounds/3.mp3",
     imageSource: "../assets/images/Mozart_cover.jpg",
+    requireSource: require("../assets/sounds/3.mp3"),
   },
 ];
 
@@ -75,9 +79,6 @@ export class Controls extends React.Component<Props, State> {
 
     try {
       const playbackInstance: Audio.Sound = new Audio.Sound();
-      console.log(playList[currentIndex].uri);
-
-      const source: string = playList[currentIndex].uri;
 
       const status: object = {
         shouldPlay: isPlaying,
@@ -86,7 +87,7 @@ export class Controls extends React.Component<Props, State> {
 
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
       await playbackInstance.loadAsync(
-        require(source),
+        playList[currentIndex].requireSource,
         status,
         false
       );
@@ -115,6 +116,34 @@ export class Controls extends React.Component<Props, State> {
     });
   };
 
+  handlePreviousTrack = async (): Promise<void> => {
+    let { currentIndex, playbackInstance } = this.state;
+    if (playbackInstance) {
+      await playbackInstance.unloadAsync();
+      currentIndex > 0
+        ? (currentIndex -= 1)
+        : (currentIndex = playList.length - 1);
+      this.setState({
+        currentIndex,
+      });
+      this.loadAudio();
+    }
+  };
+
+  handleNextTrack = async (): Promise<void> => {
+    let { currentIndex, playbackInstance } = this.state;
+    if (playbackInstance) {
+      await playbackInstance.unloadAsync();
+      currentIndex < playList.length - 1
+        ? (currentIndex += 1)
+        : (currentIndex = 0);
+      this.setState({
+        currentIndex,
+      });
+      this.loadAudio();
+    }
+  };
+
   render() {
     const { isPlaying } = this.state;
 
@@ -126,25 +155,33 @@ export class Controls extends React.Component<Props, State> {
         />
 
         <TouchableOpacity onPress={() => alert("")}>
-          <MaterialIcons name="skip-previous" size={38} color="#7470ff" />
+          <MaterialIcons
+            name="skip-previous"
+            size={38}
+            style={styles.materialPicture}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={this.handlePlayPause}>
           {isPlaying ? (
             <MaterialIcons
               name="pause-circle-filled"
               size={38}
-              color="#7470ff"
+              style={styles.materialPicture}
             />
           ) : (
             <MaterialIcons
               name="play-circle-filled"
               size={38}
-              color="#7470ff"
+              style={styles.materialPicture}
             />
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => alert("")}>
-          <MaterialIcons name="skip-next" size={38} color="#7470ff" />
+          <MaterialIcons
+            name="skip-next"
+            size={38}
+            style={styles.materialPicture}
+          />
         </TouchableOpacity>
       </View>
     );
@@ -152,6 +189,9 @@ export class Controls extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  materialPicture: {
+    color: "#2f712f",
+  },
   container: {
     flexDirection: "row",
     height: 60,
