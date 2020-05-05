@@ -63,4 +63,9 @@ app.manifest
 # Expo
 .expo/*
 
+
+
+
+
 tsconfig.json
+web-build

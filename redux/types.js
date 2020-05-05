@@ -1,0 +1,3 @@
+export const LOADING_DATA = "LOADING_DATA";
+export const SET_TRACKS = "SET_TRACKS";
+export const LOADING_FAILED = "LOADING_FAILED";
