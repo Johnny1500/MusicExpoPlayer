@@ -85,12 +85,13 @@ export class Controls extends React.Component<Props, State> {
         volume: volume,
       };
 
+      const source = {
+        uri:
+          "https://ia803008.us.archive.org/3/items/a_day_with_great_poets_1308_librivox/a_day_with_great_poets_01_byron_128kb.mp3",
+      };
+
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
-      await playbackInstance.loadAsync(
-        playList[currentIndex].requireSource,
-        status,
-        false
-      );
+      await playbackInstance.loadAsync(source, status, false);
       this.setState({
         playbackInstance,
       });
@@ -151,7 +152,10 @@ export class Controls extends React.Component<Props, State> {
       <View style={styles.container}>
         <Image
           style={styles.albumCover}
-          source={require("../assets/images/Mozart_cover.jpg")}
+          source={{
+            uri:
+              "https://ia803008.us.archive.org/3/items/a_day_with_great_poets_1308_librivox/day_great_poets_1310.jpg",
+          }}
         />
 
         <TouchableOpacity onPress={() => alert("")}>

@@ -1,5 +1,5 @@
 import { LOADING_DATA, SET_TRACKS, LOADING_FAILED } from "../types";
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery, all } from "redux-saga/effects";
 import axios from "axios";
 
 axios.defaults.baseURL =
