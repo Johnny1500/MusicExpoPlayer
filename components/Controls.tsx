@@ -3,16 +3,21 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Audio, AVPlaybackStatus } from "expo-av";
 
+// Redux stuff
+import { connect } from "react-redux";
+
 interface Track {
+  id: string;
   title: string;
   author: string;
-  source: string;
   uri: string;
   imageSource: string;
-  requireSource: any;
+  duration: string;
 }
 
-interface Props {}
+interface Props {
+  tracks: Array<Object>;
+}
 
 interface State {
   isPlaying: boolean;
@@ -20,34 +25,13 @@ interface State {
   currentIndex: number;
   volume: number;
   isBuffering: boolean;
+  trackSource: string;
+  imageSource: string;
 }
 
-const playList: Track[] = [
-  {
-    title: "Clarinet Concerto in A major, K. 622 - I. Allegro",
-    author: "Wolfgang Amadeus Mozart",
-    source: "musopen.org",
-    uri: "../assets/sounds/1.mp3",
-    imageSource: "../assets/images/Mozart_cover.jpg",
-    requireSource: require("../assets/sounds/1.mp3"),
-  },
-  {
-    title: "Le Nozze di Figaro - No. 11 Cavatina",
-    author: "Wolfgang Amadeus Mozart",
-    source: "musopen.org",
-    uri: "../assets/sounds/2.mp3",
-    imageSource: "../assets/images/Mozart_cover2.jpg",
-    requireSource: require("../assets/sounds/2.mp3"),
-  },
-  {
-    title: "Mozart - Serenade No. 5, K. 204 in D major - IV. Menuetto",
-    author: "Wolfgang Amadeus Mozart",
-    source: "musopen.org",
-    uri: "../assets/sounds/3.mp3",
-    imageSource: "../assets/images/Mozart_cover.jpg",
-    requireSource: require("../assets/sounds/3.mp3"),
-  },
-];
+interface StateFromProps {
+  tracks: Array<Object>;
+}
 
 export class Controls extends React.Component<Props, State> {
   state = {
@@ -56,6 +40,10 @@ export class Controls extends React.Component<Props, State> {
     currentIndex: 0,
     volume: 1.0,
     isBuffering: false,
+    trackSource:
+      "https://ia803008.us.archive.org/3/items/a_day_with_great_poets_1308_librivox/a_day_with_great_poets_01_byron_128kb.mp3",
+    imageSource:
+      "https://ia803008.us.archive.org/3/items/a_day_with_great_poets_1308_librivox/day_great_poets_1310.jpg",
   };
 
   async componentDidMount(): Promise<void> {
@@ -75,7 +63,13 @@ export class Controls extends React.Component<Props, State> {
   }
 
   async loadAudio(): Promise<void> {
-    const { currentIndex, isPlaying, isBuffering, volume } = this.state;
+    const {
+      currentIndex,
+      isPlaying,
+      isBuffering,
+      volume,
+      trackSource,
+    } = this.state;
 
     try {
       const playbackInstance: Audio.Sound = new Audio.Sound();
@@ -85,12 +79,12 @@ export class Controls extends React.Component<Props, State> {
         volume: volume,
       };
 
+      const source = {
+        uri: trackSource,
+      };
+
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
-      await playbackInstance.loadAsync(
-        playList[currentIndex].requireSource,
-        status,
-        false
-      );
+      await playbackInstance.loadAsync(source, status, false);
       this.setState({
         playbackInstance,
       });
@@ -122,9 +116,11 @@ export class Controls extends React.Component<Props, State> {
       await playbackInstance.unloadAsync();
       currentIndex > 0
         ? (currentIndex -= 1)
-        : (currentIndex = playList.length - 1);
+        : (currentIndex = tracks.length - 1);
       this.setState({
         currentIndex,
+        trackSource: tracks[currentIndex]["uri"],
+        imageSource: tracks[currentIndex]["imageSource"],
       });
       this.loadAudio();
     }
@@ -134,27 +130,34 @@ export class Controls extends React.Component<Props, State> {
     let { currentIndex, playbackInstance } = this.state;
     if (playbackInstance) {
       await playbackInstance.unloadAsync();
-      currentIndex < playList.length - 1
+      currentIndex < tracks.length - 1
         ? (currentIndex += 1)
         : (currentIndex = 0);
       this.setState({
         currentIndex,
+        trackSource: tracks[currentIndex]["uri"],
+        imageSource: tracks[currentIndex]["imageSource"],
       });
       this.loadAudio();
     }
   };
 
   render() {
-    const { isPlaying } = this.state;
+    const { isPlaying, imageSource, currentIndex } = this.state;
+    const { tracks } = this.props;
+    // console.log('tracks Controls :>> ', tracks);
+    console.log("track1 :>> ", tracks[currentIndex]);
 
     return (
       <View style={styles.container}>
         <Image
           style={styles.albumCover}
-          source={require("../assets/images/Mozart_cover.jpg")}
+          source={{
+            uri: imageSource,
+          }}
         />
 
-        <TouchableOpacity onPress={() => alert("")}>
+        <TouchableOpacity onPress={this.handlePreviousTrack}>
           <MaterialIcons
             name="skip-previous"
             size={38}
@@ -176,7 +179,7 @@ export class Controls extends React.Component<Props, State> {
             />
           )}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert("")}>
+        <TouchableOpacity onPress={this.handleNextTrack}>
           <MaterialIcons
             name="skip-next"
             size={38}
@@ -204,4 +207,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Controls;
+const mapStateToProps = (state) => ({
+  tracks: state.tracks,
+  loading: state.loading,
+});
+
+export default connect(mapStateToProps)(Controls);
