@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Audio, AVPlaybackStatus } from "expo-av";
 
+// Redux stuff
+import { connect } from "react-redux";
+
 interface Track {
   title: string;
   author: string;
