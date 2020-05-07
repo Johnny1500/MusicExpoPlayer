@@ -8,7 +8,7 @@ export default function (state, action) {
         loading: true,
       };
     case SET_TRACKS:
-      console.log("action.payload :>> ", action.payload);
+      // console.log("action.payload :>> ", action.payload);
       return {
         ...state,
         tracks: action.payload,
