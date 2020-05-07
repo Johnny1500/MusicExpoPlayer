@@ -110,43 +110,42 @@ export class Controls extends React.Component<Props, State> {
     });
   };
 
-  handlePreviousTrack = async (): Promise<void> => {
-    let { currentIndex, playbackInstance } = this.state;
-    if (playbackInstance) {
-      await playbackInstance.unloadAsync();
-      currentIndex > 0
-        ? (currentIndex -= 1)
-        : (currentIndex = tracks.length - 1);
-      this.setState({
-        currentIndex,
-        trackSource: tracks[currentIndex]["uri"],
-        imageSource: tracks[currentIndex]["imageSource"],
-      });
-      this.loadAudio();
-    }
-  };
+  // handlePreviousTrack = async (amountOfTracks: number): Promise<void> => {
+  //   let { currentIndex, playbackInstance } = this.state;
+  //   if (playbackInstance) {
+  //     await playbackInstance.unloadAsync();
+  //     currentIndex > 0
+  //       ? (currentIndex -= 1)
+  //       : (currentIndex = amountOfTracks - 1);
+  //     this.setState({
+  //       currentIndex,
+  //     });
+  //     this.loadAudio();
+  //   }
+  // };
 
-  handleNextTrack = async (): Promise<void> => {
-    let { currentIndex, playbackInstance } = this.state;
-    if (playbackInstance) {
-      await playbackInstance.unloadAsync();
-      currentIndex < tracks.length - 1
-        ? (currentIndex += 1)
-        : (currentIndex = 0);
-      this.setState({
-        currentIndex,
-        trackSource: tracks[currentIndex]["uri"],
-        imageSource: tracks[currentIndex]["imageSource"],
-      });
-      this.loadAudio();
-    }
-  };
+  // handleNextTrack = async (amountOfTracks: number): Promise<void> => {
+  //   let { currentIndex, playbackInstance } = this.state;
+  //   if (playbackInstance) {
+  //     await playbackInstance.unloadAsync();
+  //     currentIndex < amountOfTracks - 1
+  //       ? (currentIndex += 1)
+  //       : (currentIndex = 0);
+  //     this.setState({
+  //       currentIndex,
+  //     });
+  //     this.loadAudio();
+  //   }
+  // };
 
   render() {
     const { isPlaying, imageSource, currentIndex } = this.state;
     const { tracks } = this.props;
     // console.log('tracks Controls :>> ', tracks);
     console.log("track1 :>> ", tracks[currentIndex]);
+
+    const amountOfTracks = tracks.length;
+    console.log('amountOfTracks :>> ', amountOfTracks);
 
     return (
       <View style={styles.container}>
@@ -157,7 +156,7 @@ export class Controls extends React.Component<Props, State> {
           }}
         />
 
-        <TouchableOpacity onPress={this.handlePreviousTrack}>
+        <TouchableOpacity onPress={() => alert("")}>
           <MaterialIcons
             name="skip-previous"
             size={38}
@@ -179,7 +178,7 @@ export class Controls extends React.Component<Props, State> {
             />
           )}
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.handleNextTrack}>
+        <TouchableOpacity onPress={() => alert("")}>
           <MaterialIcons
             name="skip-next"
             size={38}
