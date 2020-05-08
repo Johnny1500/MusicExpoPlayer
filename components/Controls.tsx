@@ -4,7 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Audio, AVPlaybackStatus } from "expo-av";
 
 // Redux stuff
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 
 interface Track {
   id: string;
@@ -16,7 +16,7 @@ interface Track {
 }
 
 interface Props {
-  tracks: Array<Object>;
+  tracks: Array<Track>;
   loading: boolean
 }
 
@@ -30,9 +30,9 @@ interface State {
   imageSource: string;
 }
 
-interface StateFromProps {
-  tracks: Array<Object>;
-}
+// interface StateFromProps {
+//   tracks: Array<Object>;
+// }
 
 export class Controls extends React.Component<Props, State> {
   state = {
@@ -75,6 +75,7 @@ export class Controls extends React.Component<Props, State> {
     const { tracks, loading } = this.props;
     let track = tracks[currentIndex];
 
+    // console.log('tracks :>> ', tracks);
     console.log('track :>> ', track);
     console.log('loading :>> ', loading);
 
@@ -152,7 +153,7 @@ export class Controls extends React.Component<Props, State> {
     // console.log("track1 :>> ", tracks[currentIndex]);
 
     const amountOfTracks = tracks.length;
-    // console.log('amountOfTracks :>> ', amountOfTracks);
+    console.log('amountOfTracks :>> ', amountOfTracks);
 
     return (
       <View style={styles.container}>
@@ -213,9 +214,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  tracks: state.tracks,
-  loading: state.loading,
-});
+// const mapStateToProps = (state:Props) => ({
+//   tracks: state.tracks,
+//   loading: state.loading,
+// });
 
-export default connect(mapStateToProps)(Controls);
+// export default connect(mapStateToProps)(Controls);
+
+export default Controls;

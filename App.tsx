@@ -12,7 +12,7 @@ import createSagaMiddleware from "redux-saga";
 // @ts-ignore
 import rootSaga from "./redux/sagas/sagas";
 
-import Controls from "./components/Controls";
+import Home from "./components/Home";
 
 const initialState = {
   tracks: [],
@@ -32,41 +32,29 @@ sagaMiddleware.run(rootSaga);
 
 const action = (type: string) => store.dispatch({ type });
 
-// console.log("store :>> ", store);
-
 const App: () => React.ReactNode = () => {
   React.useEffect(() => {
     action("LOADING_DATA");
-    // console.log("store2 :>> ", store);
-    // console.log("state :>> ", store.getState().tracks);
   }, []);
-
-  // let tracks = store.getState().tracks;
-  // let track = tracks[0];
-
-  // console.log('tracks :>> ', tracks);
-  // console.log('track :>> ', track);
 
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <View style={styles.lineStyle} />
-        <Controls />
-      </View>
+      <Home />
     </Provider>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
 
-  lineStyle: {
-    borderWidth: 1,
-    borderColor: "#2f712f",
-    marginHorizontal: vw(2),
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "flex-end",
+//   },
+
+//   lineStyle: {
+//     borderWidth: 1,
+//     borderColor: "#2f712f",
+//     marginHorizontal: vw(2),
+//   },
+// });
 
 export default App;
