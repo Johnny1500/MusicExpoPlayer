@@ -17,7 +17,7 @@ interface Track {
 
 interface Props {
   tracks: Array<Track>;
-  loading: boolean
+  loading: boolean;
 }
 
 interface State {
@@ -63,6 +63,15 @@ export class Controls extends React.Component<Props, State> {
     }
   }
 
+  async componentWillUnmount(): Promise<void> {
+    try {
+      const { playbackInstance } = this.state;
+      await playbackInstance.unloadAsync();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async loadAudio(): Promise<void> {
     const {
       currentIndex,
@@ -76,8 +85,8 @@ export class Controls extends React.Component<Props, State> {
     let track = tracks[currentIndex];
 
     // console.log('tracks :>> ', tracks);
-    console.log('track :>> ', track);
-    console.log('loading :>> ', loading);
+    // console.log("track :>> ", track);
+    // console.log("loading :>> ", loading);
 
     try {
       const playbackInstance: Audio.Sound = new Audio.Sound();
@@ -88,7 +97,7 @@ export class Controls extends React.Component<Props, State> {
       };
 
       const source = {
-        uri: trackSource,
+        uri: tracks[currentIndex].uri,
       };
 
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
@@ -150,10 +159,10 @@ export class Controls extends React.Component<Props, State> {
     const { isPlaying, imageSource, currentIndex } = this.state;
     const { tracks } = this.props;
     // console.log('tracks Controls :>> ', tracks);
-    // console.log("track1 :>> ", tracks[currentIndex]);
+    console.log("track1 :>> ", tracks[currentIndex]);
 
     const amountOfTracks = tracks.length;
-    console.log('amountOfTracks :>> ', amountOfTracks);
+    console.log("amountOfTracks :>> ", amountOfTracks);
 
     return (
       <View style={styles.container}>
