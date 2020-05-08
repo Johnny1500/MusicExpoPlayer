@@ -82,7 +82,7 @@ export class Controls extends React.Component<Props, State> {
     } = this.state;
 
     const { tracks, loading } = this.props;
-    let track = tracks[currentIndex];
+    // let track = tracks[currentIndex];
 
     // console.log('tracks :>> ', tracks);
     // console.log("track :>> ", track);
@@ -96,8 +96,15 @@ export class Controls extends React.Component<Props, State> {
         volume: volume,
       };
 
+      console.log("tracks[currentIndex] loadAudio :>> ", tracks[currentIndex]);
+
+      let uriTrackSource = tracks[currentIndex]
+        ? tracks[currentIndex].uri
+        : trackSource;
+      console.log("uriTrackSource loadAudio:>> ", uriTrackSource);
+
       const source = {
-        uri: tracks[currentIndex].uri,
+        uri: uriTrackSource,
       };
 
       playbackInstance.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
@@ -160,16 +167,22 @@ export class Controls extends React.Component<Props, State> {
     const { tracks } = this.props;
     // console.log('tracks Controls :>> ', tracks);
     console.log("track1 :>> ", tracks[currentIndex]);
+    console.log("currentIndex :>> ", currentIndex);
 
     const amountOfTracks = tracks.length;
-    console.log("amountOfTracks :>> ", amountOfTracks);
+    // console.log("amountOfTracks :>> ", amountOfTracks);
+    let uriImageSource = tracks[currentIndex]
+      ? tracks[currentIndex].imageSource
+      : imageSource;
+    console.log("tracks[currentIndex] render :>> ", tracks[currentIndex]);
+    console.log("uriImageSource render :>> ", uriImageSource);
 
     return (
       <View style={styles.container}>
         <Image
           style={styles.albumCover}
           source={{
-            uri: imageSource,
+            uri: uriImageSource,
           }}
         />
 
